@@ -8,11 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
+    var viewModel: EmojiMemoryGame
+    
     var body: some View {
         HStack {
-            ForEach (0..<4) { index in
-                CardView()
-                }
+            ForEach (viewModel.cards) { card in
+                CardView(card: card).onTapGesture(perform: {
+                    self.viewModel.choose(card: card)
+                })
+            }
         }
             .padding()
             .foregroundColor(.orange)
@@ -21,11 +25,18 @@ struct ContentView: View {
 }
 
 struct CardView : View {
+    var card : MemoryGame<String>.Card
+    
     var body : some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 20.0).fill(Color.white)
-            RoundedRectangle(cornerRadius: 20.0).stroke()
-            Text("😄")
+            if card.isFaceUp {
+                RoundedRectangle(cornerRadius: 20.0).fill(Color.white)
+                RoundedRectangle(cornerRadius: 20.0).stroke()
+                Text(card.content)
+            }
+            else {
+                RoundedRectangle(cornerRadius: 20.0).fill()
+            }
 
         }
     }
@@ -35,6 +46,6 @@ struct CardView : View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(viewModel: EmojiMemoryGame())
     }
 }
